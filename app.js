@@ -13,6 +13,7 @@ app.get("/", (req, res) => {
   </head>
   <body>
     <h1>Wizard News</h1>
+    <p>Test</p>
   </body>
   </html>
   `);
