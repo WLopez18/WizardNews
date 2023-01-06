@@ -7,22 +7,40 @@ app.use(express.static('public'));
 app.get("/", (req, res) => {
   const posts = postBank.list();
   // console.log(posts);
-  res.send(`
+  const html = `<!DOCTYPE html>
   <html>
   <head>
-  <link rel='stylesheet' href='./style.css' />
+  <link rel='stylesheet' href='/style.css' />
   <title>Wizard News</title>
   </head>
   <body>
-    <h1>Wizard News</h1>
-    <ul>
-    ${posts.map( post => {
-      return `<li>${post.title}</li>`
-    }).join('')}
-    </ul>
+    <div class="news-list">
+      <header><img src="/logo.png"/>Wizard News</header>
+      ${posts.map(post => `
+        <div class='news-item'>
+          <p>
+            <span class="news-position">${post.id}. ▲</span>
+            ${post.title}
+            <small>(by ${post.name})</small>
+          </p>
+          <small class="news-info">
+            ${post.upvotes} upvotes | ${post.date}
+          </small>
+        </div>`
+  ).join('')}
+    </div>
   </body>
-  </html>
-  `);
+  </html>`;
+
+  res.send(html);
+});
+
+app.get('/posts/:id', (req, res) => {
+  const id = req.params.id;
+  const post = postBank.find(id);
+  res.send(`
+  ${post.id}
+    `);
 });
 
 const PORT = 3000;
