@@ -5,8 +5,9 @@ const postBank = require('./postBank');
 app.use(express.static('public'));
 
 app.get("/", (req, res) => {
+
   const posts = postBank.list();
-  // console.log(posts);
+   console.log(posts);
   const html = `<!DOCTYPE html>
   <html>
   <head>
@@ -20,7 +21,7 @@ app.get("/", (req, res) => {
         <div class='news-item'>
           <p>
             <span class="news-position">${post.id}. ▲</span>
-            ${post.title}
+            <a href="/posts/${post.id}">${post.title}</a>
             <small>(by ${post.name})</small>
           </p>
           <small class="news-info">
@@ -39,8 +40,30 @@ app.get('/posts/:id', (req, res) => {
   const id = req.params.id;
   const post = postBank.find(id);
   res.send(`
-  ${post.id}
-    `);
+  <!DOCTYPE html>
+  <html>
+  <head>
+  <link rel='stylesheet' href='/style.css' />
+  <title>Wizard News</title>
+  </head>
+  <body>
+    <div class="news-list">
+      <header><img src="/logo.png"/>Wizard News</header>
+   <link rel='stylesheet' href='/style.css' />
+  <div class='news-item'>
+  <p>
+    <span class="news-position">${post.id}. ▲</span>
+    ${post.title}
+    <small>(by ${post.name})</small>
+  </p>
+  <p>${post.content}</p>
+  <small class="news-info">
+  ${post.date}
+  </small>
+  </div>
+  </body>
+</html>
+  `);
 });
 
 const PORT = 3000;
