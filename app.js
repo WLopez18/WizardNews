@@ -7,7 +7,7 @@ app.use(express.static('public'));
 app.get("/", (req, res) => {
 
   const posts = postBank.list();
-   console.log(posts);
+  console.log(posts);
   const html = `<!DOCTYPE html>
   <html>
   <head>
@@ -39,7 +39,26 @@ app.get("/", (req, res) => {
 app.get('/posts/:id', (req, res) => {
   const id = req.params.id;
   const post = postBank.find(id);
-  res.send(`
+  if (!post.id) {
+    res.status(404)
+    const html = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Wizard News</title>
+      <link rel="stylesheet" href="/style.css" />
+    </head>
+    <body>
+      <header><img src="/logo.png"/>Wizard News</header>
+      <div class="not-found">
+        <p>Accio Page! 🧙‍♀️ ... Page Not Found</p>
+        <img src="/dumbledore-404.gif" />
+      </div>
+    </body>
+    </html>`
+    res.send(html)
+  } else {
+    res.send(`
   <!DOCTYPE html>
   <html>
   <head>
@@ -64,9 +83,10 @@ app.get('/posts/:id', (req, res) => {
   </body>
 </html>
   `);
+  }
 });
 
-const PORT = 3000;
+const { PORT = 1337 } = process.env;
 
 app.listen(PORT, () => {
   console.log(`App listening in port ${PORT}`);
